@@ -1,3 +1,7 @@
+//This file is the entry point to the application. It contains functions
+//to prompt the appropriate questions to the user, process the input
+//and make a call to a function that will use this input to generate the html 
+
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
@@ -117,5 +121,10 @@ const addMore = function(){
             console.log(chalk.green("\n*** Please find your file in the 'output' folder ***\n"));
             return writeFileAsync(outputPath, html);            
         }
+    })
+    .catch(function(err) {
+        console.log(chalk.red("\n*** Something went wrong. Please try again. ***\n"));
+        console.log(err);
+        console.log(err.response.status);
     });
 }

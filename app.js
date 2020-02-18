@@ -12,6 +12,8 @@ const path = require("path");
 const fs = require("fs");
 const util = require("util");
 
+const dir = './output';
+
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
@@ -51,22 +53,58 @@ function promptUser(){
               {
                 type: "input",
                 name: "name",
-                message: "Enter the Employee Name"
+                message: "Enter the Employee Name",
+                validate: function(val) {
+                    // The users must enter a valid email format
+                    let isValid = val === "" ? false : true;
+                    if(!isValid)
+                    {
+                        console.log(chalk.red("\n*** Must enter a name! ***\n")); 
+                    }
+                    return isValid;
+                }
               },
               {
                 type: "input",
                 name: "ID",
-                message: "Enter the Employee ID"
+                message: "Enter the Employee ID",
+                validate: function(val) {
+                    // The users must enter a valid email format
+                    let isValid = val === "" ? false : true;
+                    if(!isValid)
+                    {
+                        console.log(chalk.red("\n*** Must enter a EmployeeID! ***\n")); 
+                    }
+                    return isValid;
+                }
               },
               {
                 type: "input",
                 name: "email",
-                message: "Enter the Employee E-mail address"
+                message: "Enter the Employee E-mail address",
+                validate: function(val) {
+                    // The users must enter a valid email format
+                    let isValid = /.+@.+\..+/gi.test(val);
+                    if(!isValid)
+                    {
+                        console.log(chalk.red("\n*** Must enter a valid format! ***\n")); 
+                    }
+                    return isValid;
+                }
               },
               {
                   type: "input",
                   name: "roleBasedAns",
-                  message: `${CompanyRoles[role]}`
+                  message: `${CompanyRoles[role]}`,
+                  validate: function(val) {
+                    // The users must enter a valid email format
+                    let isValid = val === "" ? false : true;
+                    if(!isValid)
+                    {
+                        console.log(chalk.red("\n*** Must enter non-empty value! ***\n")); 
+                    }
+                    return isValid;
+                }
               }
         ]).then(function(answers){
             //Here we create either manager, engineer or intern object depending on the user input and add it to the employee array
@@ -117,6 +155,11 @@ const addMore = function(){
             promptUser();
         }
         else{
+            
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
+
             const html = render(employees);
             console.log(chalk.green("\n*** Please find your file in the 'output' folder ***\n"));
             return writeFileAsync(outputPath, html);            

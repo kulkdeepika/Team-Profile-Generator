@@ -20,7 +20,7 @@ When the application begins, the user is asked to enter the role of the employee
 
 ![Demo Picture](./assets/1Demo.png)
 
-![Demo Picture](./assets/1Demo.png)
+![Demo Picture](./assets/2Demo.png)
 
 #### Demo
 
@@ -39,5 +39,9 @@ Find the video Demo here:
 Install `inquirer` package to utilize this application.
 Run the `app.js` file.
 The desired file is available in `./output` directory. (It will be created if doesnt already exist)
+
+# Final Output 
+
+![Output file picture](./assets/Screenshot.png)
 
 

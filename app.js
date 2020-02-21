@@ -31,113 +31,114 @@ const CompanyRoles = {
 
 console.log(chalk.green("\n*** Welcome to Team Profile Generator ***\n"));
 
-//fire the questions
-promptUser();
+async function promptUser(){
 
-function promptUser(){
-    inquirer.prompt([
-        {
-          type: "list",
-          name: "role",
-          message: "What is the role of the employee?",
-          choices: [
-              'Manager',
-              'Engineer',
-              'Intern'
-          ]
-        },  
-      ])
-      .then(function(roles) {
+    try{
+        var roles = await inquirer.prompt([
+            {
+              type: "list",
+              name: "role",
+              message: "What is the role of the employee?",
+              choices: [
+                  'Manager',
+                  'Engineer',
+                  'Intern'
+              ]
+            },  
+          ]);
+    
         let role = roles.role;
-        inquirer.prompt([
-              {
-                type: "input",
-                name: "name",
-                message: "Enter the Employee Name",
-                validate: function(val) {
-                    // The users must enter a valid email format
-                    let isValid = val === "" ? false : true;
-                    if(!isValid)
-                    {
-                        console.log(chalk.red("\n*** Must enter a name! ***\n")); 
-                    }
-                    return isValid;
-                }
-              },
-              {
-                type: "input",
-                name: "ID",
-                message: "Enter the Employee ID",
-                validate: function(val) {
-                    // The users must enter a valid email format
-                    let isValid = val === "" ? false : true;
-                    if(!isValid)
-                    {
-                        console.log(chalk.red("\n*** Must enter a EmployeeID! ***\n")); 
-                    }
-                    return isValid;
-                }
-              },
-              {
-                type: "input",
-                name: "email",
-                message: "Enter the Employee E-mail address",
-                validate: function(val) {
-                    // The users must enter a valid email format
-                    let isValid = /.+@.+\..+/gi.test(val);
-                    if(!isValid)
-                    {
-                        console.log(chalk.red("\n*** Must enter a valid format! ***\n")); 
-                    }
-                    return isValid;
-                }
-              },
-              {
-                  type: "input",
-                  name: "roleBasedAns",
-                  message: `${CompanyRoles[role]}`,
-                  validate: function(val) {
-                    // The users must enter a valid email format
-                    let isValid = val === "" ? false : true;
-                    if(!isValid)
-                    {
-                        console.log(chalk.red("\n*** Must enter non-empty value! ***\n")); 
-                    }
-                    return isValid;
-                }
-              }
-        ]).then(function(answers){
-            //Here we create either manager, engineer or intern object depending on the user input and add it to the employee array
-            if(role === "Manager")
-            {
-                employees.push(new Manager(answers.name, answers.ID, answers.email,answers.roleBasedAns));
-                console.log(chalk.green("\n*** Employee successfully added ***\n"));
-                addMore(); 
-            }
-            else if(role === "Engineer")
-            {
-                employees.push(new Engineer(answers.name, answers.ID, answers.email,answers.roleBasedAns));
-                console.log(chalk.green("\n*** Employee successfully added ***\n"));
-                addMore();
-            }
-            else
-            {
-                employees.push(new Intern(answers.name, answers.ID, answers.email,answers.roleBasedAns));
-                console.log(chalk.green("\n*** Employee successfully added ***\n"));
-                addMore();
-            }
     
-        })
+        var answers = await inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "Enter the Employee Name",
+            validate: function(val) {
+                // The users must enter a name
+                let isValid = val === "" ? false : true;
+                if(!isValid)
+                {
+                    console.log(chalk.red("\n*** Must enter a name! ***\n")); 
+                }
+                return isValid;
+            }
+        },
+        {
+            type: "input",
+            name: "ID",
+            message: "Enter the Employee ID",
+            validate: function(val) {
+                // The users must enter a ID
+                let isValid = val === "" ? false : true;
+                if(!isValid)
+                {
+                    console.log(chalk.red("\n*** Must enter a EmployeeID! ***\n")); 
+                }
+                return isValid;
+            }
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "Enter the Employee E-mail address",
+            validate: function(val) {
+                // The users must enter a valid email format
+                let isValid = /.+@.+\..+/gi.test(val);
+                if(!isValid)
+                {
+                    console.log(chalk.red("\n*** Must enter a valid format! ***\n")); 
+                }
+                return isValid;
+            }
+        },
+        {
+            type: "input",
+            name: "roleBasedAns",
+            message: `${CompanyRoles[role]}`,
+            validate: function(val) {
+                // The users must enter a non-null value
+                let isValid = val === "" ? false : true;
+                if(!isValid)
+                {
+                    console.log(chalk.red("\n*** Must enter non-empty value! ***\n")); 
+                }
+                return isValid;
+            }
+        }
+      ])
     
-    })
-     .catch(function(err) {
+       //Here we create either manager, engineer or intern object depending on the user input and add it to the employee array
+       if(role === "Manager")
+       {
+           employees.push(new Manager(answers.name, answers.ID, answers.email,answers.roleBasedAns));
+           console.log(chalk.green("\n*** Employee successfully added ***\n"));
+           addMore(); 
+       }
+       else if(role === "Engineer")
+       {
+           employees.push(new Engineer(answers.name, answers.ID, answers.email,answers.roleBasedAns));
+           console.log(chalk.green("\n*** Employee successfully added ***\n"));
+           addMore();
+       }
+       else
+       {
+           employees.push(new Intern(answers.name, answers.ID, answers.email,answers.roleBasedAns));
+           console.log(chalk.green("\n*** Employee successfully added ***\n"));
+           addMore();
+       }
+    }
+    catch{
+
         console.log(chalk.red("\n*** Something went wrong. Please try again. ***\n"));
         console.log(err);
         console.log(err.response.status);
-    });
+    }
+
 }
 
 //If the user wants to add more employees, take the inputs, otherwise, pass the employee array to a function that will generate the html
+
 const addMore = function(){
     inquirer.prompt([
         {
@@ -170,4 +171,7 @@ const addMore = function(){
         console.log(err);
         console.log(err.response.status);
     });
+
 }
+//fire the questions
+promptUser();
